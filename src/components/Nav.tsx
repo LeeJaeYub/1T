@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { motion, useMotionValueEvent, useScroll } from 'motion/react'
+import { Magnetic } from '@/components/Magnetic'
 
 const LINKS = [
   { href: '#work', label: 'Work' },
@@ -34,13 +35,14 @@ export function Nav() {
         </a>
         <nav className="flex items-center gap-8">
           {LINKS.map((link) => (
-            <a
-              key={link.href}
-              href={link.href}
-              className="text-sm text-stone-400 transition-colors hover:text-stone-50"
-            >
-              {link.label}
-            </a>
+            <Magnetic key={link.href} strength={0.5}>
+              <a
+                href={link.href}
+                className="text-sm text-stone-400 transition-colors hover:text-stone-50"
+              >
+                {link.label}
+              </a>
+            </Magnetic>
           ))}
         </nav>
       </div>

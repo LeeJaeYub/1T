@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { motion, useReducedMotion } from 'motion/react'
 import { X } from '@phosphor-icons/react'
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog'
+import { TiltCard } from '@/components/TiltCard'
 import { artworkImage, artworks, type Artwork } from '@/lib/artworks'
 
 export function Catalog() {
@@ -31,15 +32,15 @@ export function Catalog() {
               }}
               className="group mb-6 block w-full break-inside-avoid text-left"
             >
-              <span className="relative block overflow-hidden rounded-sm border border-white/10">
+              <TiltCard className="block overflow-hidden rounded-sm border border-white/10" maxTilt={7}>
                 <img
                   src={artworkImage(art)}
                   alt={art.title}
                   loading="lazy"
-                  className="w-full transition-transform duration-700 ease-out group-hover:scale-[1.03]"
+                  className="w-full"
                 />
-                <span className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
-              </span>
+                <span className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/55 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+              </TiltCard>
               <span className="mt-3 flex items-baseline justify-between">
                 <span className="text-sm text-stone-200">{art.title}</span>
                 <span className="font-mono text-xs text-stone-500">{art.year}</span>
