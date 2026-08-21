@@ -49,7 +49,6 @@ export function SelectedWorks() {
               start: 'top top',
               end: () => `+=${distance}`,
               pin: true,
-              pinType: 'transform',
               scrub: 1,
               invalidateOnRefresh: true,
               onUpdate: (self) => {
@@ -60,8 +59,6 @@ export function SelectedWorks() {
               onLeaveBack: () => skewSetter(0),
             },
           })
-
-          ScrollTrigger.refresh()
         })
       })
     }, wrap)
