@@ -28,41 +28,54 @@ export function SelectedWorks() {
 
   useEffect(() => {
     if (reduce || !wrap.current || !track.current) return
+
+    // Measured fresh on every refresh (mount, resize, font/image load) rather
+    // than captured once. Capturing it as a const desynced the pin length from
+    // the actual travel whenever the window width changed: the pin kept holding
+    // for the old distance while the strip only needed the new one, leaving a
+    // blank region, and x overshot past the end of the strip.
+    const getDistance = () =>
+      Math.max(0, track.current!.scrollWidth - window.innerWidth)
+
     const ctx = gsap.context(() => {
-      // Let layout settle (fonts/images) before measuring travel distance.
-      requestAnimationFrame(() => {
-        requestAnimationFrame(() => {
-          const distance = track.current!.scrollWidth - window.innerWidth
-          if (distance <= 0) return
+      const skewSetter = gsap.quickTo(skewLayer.current, 'skewX', {
+        duration: 0.5,
+        ease: 'power3',
+      })
 
-          const skewSetter = gsap.quickTo(skewLayer.current, 'skewX', {
-            duration: 0.5,
-            ease: 'power3',
-          })
-
-          gsap.to(track.current, {
-            x: -distance,
-            ease: 'none',
-            force3D: true,
-            scrollTrigger: {
-              trigger: wrap.current,
-              start: 'top top',
-              end: () => `+=${distance}`,
-              pin: true,
-              scrub: 1,
-              invalidateOnRefresh: true,
-              onUpdate: (self) => {
-                const v = self.getVelocity() / 1000
-                skewSetter(gsap.utils.clamp(-6, 6, v))
-              },
-              onLeave: () => skewSetter(0),
-              onLeaveBack: () => skewSetter(0),
-            },
-          })
-        })
+      gsap.to(track.current, {
+        x: () => -getDistance(),
+        ease: 'none',
+        force3D: true,
+        scrollTrigger: {
+          trigger: wrap.current,
+          start: 'top top',
+          end: () => `+=${getDistance()}`,
+          pin: true,
+          scrub: 1,
+          invalidateOnRefresh: true,
+          onUpdate: (self) => {
+            const v = self.getVelocity() / 1000
+            skewSetter(gsap.utils.clamp(-6, 6, v))
+          },
+          onLeave: () => skewSetter(0),
+          onLeaveBack: () => skewSetter(0),
+        },
       })
     }, wrap)
-    return () => ctx.revert()
+
+    // Fonts and images change the strip's width after first paint; re-measure
+    // once they settle so start/end match the final layout.
+    const refresh = () => ScrollTrigger.refresh()
+    document.fonts?.ready.then(refresh)
+    const imgs = Array.from(wrap.current.querySelectorAll('img'))
+    const pending = imgs.filter((img) => !img.complete)
+    pending.forEach((img) => img.addEventListener('load', refresh, { once: true }))
+
+    return () => {
+      pending.forEach((img) => img.removeEventListener('load', refresh))
+      ctx.revert()
+    }
   }, [reduce])
 
   return (
