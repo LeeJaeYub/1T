@@ -1,4 +1,5 @@
 import { Nav } from '@/components/Nav'
+import { SmoothScroll } from '@/components/SmoothScroll'
 import { GrainOverlay } from '@/components/GrainOverlay'
 import { Hero } from '@/components/sections/Hero'
 import { SelectedWorks } from '@/components/sections/SelectedWorks'
@@ -9,6 +10,7 @@ import { Footer } from '@/components/Footer'
 function App() {
   return (
     <div className="bg-stone-950">
+      <SmoothScroll />
       <GrainOverlay />
       <Nav />
       <Hero />

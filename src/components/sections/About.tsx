@@ -1,4 +1,5 @@
 import { motion, useReducedMotion } from 'motion/react'
+import { REVEAL } from '@/lib/motion'
 import { artworkImage, artworks } from '@/lib/artworks'
 
 const detail = artworks.find((a) => a.slug === 'village-edge')!
@@ -13,7 +14,7 @@ export function About() {
           initial={reduce ? false : { opacity: 0, scale: 1.04 }}
           whileInView={{ opacity: 1, scale: 1 }}
           viewport={{ once: true, amount: 0.4 }}
-          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+          transition={REVEAL}
           className="order-1 aspect-[5/6] overflow-hidden rounded-sm border border-white/10 md:order-2 md:col-span-5 md:col-start-8"
         >
           <img
@@ -28,7 +29,7 @@ export function About() {
           initial={reduce ? false : { opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.4 }}
-          transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+          transition={{ ...REVEAL, delay: 0.1 }}
           className="order-2 flex flex-col gap-5 md:order-1 md:col-span-6"
         >
           <h2 className="text-3xl font-medium tracking-tight text-stone-50 md:text-4xl">

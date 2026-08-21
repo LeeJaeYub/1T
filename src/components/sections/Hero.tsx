@@ -2,6 +2,7 @@ import { useRef } from 'react'
 import { motion, useMotionValue, useSpring, useTransform } from 'motion/react'
 import { ArrowDown } from '@phosphor-icons/react'
 import { Magnetic } from '@/components/Magnetic'
+import { EASE_OUT, SPRING_HEAVY } from '@/lib/motion'
 import { artworkImage, artworks } from '@/lib/artworks'
 
 const featured = artworks.find((a) => a.slug === 'the-net')!
@@ -11,23 +12,18 @@ export function Hero() {
   const rippleRef = useRef<SVGAnimateElement>(null)
   const mx = useMotionValue(0)
   const my = useMotionValue(0)
-  const rotateX = useSpring(useTransform(my, [-0.5, 0.5], [9, -9]), {
-    stiffness: 180,
-    damping: 18,
-  })
-  const rotateY = useSpring(useTransform(mx, [-0.5, 0.5], [-9, 9]), {
-    stiffness: 180,
-    damping: 18,
-  })
+  const rotateX = useSpring(useTransform(my, [-0.5, 0.5], [9, -9]), SPRING_HEAVY)
+  const rotateY = useSpring(useTransform(mx, [-0.5, 0.5], [-9, 9]), SPRING_HEAVY)
   // Image drifts opposite the tilt (a hair of parallax "inside" the frame)
-  // instead of sitting dead-center no matter where the cursor is.
-  const imgX = useSpring(useTransform(mx, [-0.5, 0.5], [12, -12]), {
-    stiffness: 150,
-    damping: 20,
+  // instead of sitting dead-center no matter where the cursor is. Slightly
+  // laggier than the frame itself, so the two layers separate as you move.
+  const imgX = useSpring(useTransform(mx, [-0.5, 0.5], [14, -14]), {
+    ...SPRING_HEAVY,
+    mass: 0.85,
   })
-  const imgY = useSpring(useTransform(my, [-0.5, 0.5], [10, -10]), {
-    stiffness: 150,
-    damping: 20,
+  const imgY = useSpring(useTransform(my, [-0.5, 0.5], [12, -12]), {
+    ...SPRING_HEAVY,
+    mass: 0.85,
   })
 
   function handlePointerMove(e: React.PointerEvent<HTMLDivElement>) {
@@ -55,7 +51,7 @@ export function Hero() {
         <motion.h1
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
+          transition={{ duration: 1.05, ease: EASE_OUT, delay: 0.1 }}
           className="text-4xl font-medium tracking-tight text-stone-50 md:text-6xl"
         >
           Paintings that hold their <em className="not-italic text-cobalt">quiet</em>.
@@ -63,7 +59,7 @@ export function Hero() {
         <motion.p
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1], delay: 0.25 }}
+          transition={{ duration: 1.05, ease: EASE_OUT, delay: 0.28 }}
           className="max-w-[42ch] text-base leading-relaxed text-stone-400"
         >
           Oil studies of ordinary light, worked slowly, in the tradition of the
@@ -72,7 +68,7 @@ export function Hero() {
         <motion.div
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1], delay: 0.4 }}
+          transition={{ duration: 1.05, ease: EASE_OUT, delay: 0.46 }}
         >
           <Magnetic strength={0.3}>
             <a
@@ -93,7 +89,7 @@ export function Hero() {
         onPointerLeave={handlePointerLeave}
         initial={{ opacity: 0, scale: 0.96 }}
         animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1], delay: 0.15 }}
+        transition={{ duration: 1.3, ease: EASE_OUT, delay: 0.15 }}
         style={{ perspective: 1200 }}
         className="group order-1 md:order-2 md:col-span-7 md:col-start-6"
       >

@@ -1,5 +1,6 @@
 import { useRef, type ReactNode } from 'react'
 import { motion, useMotionValue, useSpring, useTransform } from 'motion/react'
+import { SPRING_HEAVY } from '@/lib/motion'
 
 // Mouse-tracked 3D tilt + a cursor-follow spotlight glow on the border.
 // Replaces a flat hover:scale with something that actually responds to
@@ -20,15 +21,9 @@ export function TiltCard({
   const glowX = useMotionValue('50%')
   const glowY = useMotionValue('50%')
 
-  const rotateX = useSpring(useTransform(my, [0, 1], [maxTilt, -maxTilt]), {
-    stiffness: 220,
-    damping: 22,
-  })
-  const rotateY = useSpring(useTransform(mx, [0, 1], [-maxTilt, maxTilt]), {
-    stiffness: 220,
-    damping: 22,
-  })
-  const scale = useSpring(1, { stiffness: 220, damping: 22 })
+  const rotateX = useSpring(useTransform(my, [0, 1], [maxTilt, -maxTilt]), SPRING_HEAVY)
+  const rotateY = useSpring(useTransform(mx, [0, 1], [-maxTilt, maxTilt]), SPRING_HEAVY)
+  const scale = useSpring(1, SPRING_HEAVY)
 
   function handlePointerMove(e: React.PointerEvent<HTMLDivElement>) {
     const rect = ref.current?.getBoundingClientRect()

@@ -1,6 +1,7 @@
 import { motion, useReducedMotion } from 'motion/react'
 import { ArrowUpRight } from '@phosphor-icons/react'
 import { Magnetic } from '@/components/Magnetic'
+import { REVEAL } from '@/lib/motion'
 
 export function Footer() {
   const reduce = useReducedMotion()
@@ -12,7 +13,7 @@ export function Footer() {
           initial={reduce ? false : { opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.5 }}
-          transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+          transition={REVEAL}
           className="flex flex-col gap-8 border-t border-white/10 pb-16 pt-14 md:flex-row md:items-end md:justify-between"
         >
           <h2 className="max-w-[16ch] text-3xl font-medium tracking-tight text-stone-50 md:text-5xl">

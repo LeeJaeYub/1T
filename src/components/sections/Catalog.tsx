@@ -1,13 +1,25 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { motion, useReducedMotion } from 'motion/react'
 import { X } from '@phosphor-icons/react'
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog'
 import { TiltCard } from '@/components/TiltCard'
+import { getLenis } from '@/lib/lenis'
+import { EASE_OUT } from '@/lib/motion'
 import { artworkImage, artworks, type Artwork } from '@/lib/artworks'
 
 export function Catalog() {
   const [active, setActive] = useState<Artwork | null>(null)
   const reduce = useReducedMotion()
+
+  // Radix locks body overflow while the lightbox is open, but Lenis drives
+  // its own scroll position and would keep gliding the page behind it.
+  useEffect(() => {
+    const lenis = getLenis()
+    if (!lenis) return
+    if (active) lenis.stop()
+    else lenis.start()
+    return () => lenis.start()
+  }, [active])
 
   return (
     <section id="work" className="bg-stone-950 px-6 py-24 md:px-10 md:py-32">
@@ -22,17 +34,17 @@ export function Catalog() {
               key={art.slug}
               type="button"
               onClick={() => setActive(art)}
-              initial={reduce ? false : { opacity: 0, y: 28 }}
+              initial={reduce ? false : { opacity: 0, y: 40 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.3 }}
+              viewport={{ once: true, amount: 0.25 }}
               transition={{
-                duration: 0.6,
-                delay: (i % 3) * 0.08,
-                ease: [0.16, 1, 0.3, 1],
+                duration: 1,
+                delay: (i % 3) * 0.11,
+                ease: EASE_OUT,
               }}
               className="group mb-6 block w-full break-inside-avoid text-left"
             >
-              <TiltCard className="block overflow-hidden rounded-sm border border-white/10" maxTilt={7}>
+              <TiltCard className="block overflow-hidden" maxTilt={7}>
                 <img
                   src={artworkImage(art)}
                   alt={art.title}

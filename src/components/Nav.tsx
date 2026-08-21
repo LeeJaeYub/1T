@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { motion, useMotionValueEvent, useScroll } from 'motion/react'
 import { Magnetic } from '@/components/Magnetic'
+import { EASE_OUT } from '@/lib/motion'
 
 const LINKS = [
   { href: '#work', label: 'Work' },
@@ -24,8 +25,8 @@ export function Nav() {
     <motion.header
       initial={{ y: -32, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
-      transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-      className={`fixed inset-x-0 top-0 z-50 flex h-16 items-center transition-colors duration-300 ${
+      transition={{ duration: 0.9, ease: EASE_OUT, delay: 0.2 }}
+      className={`fixed inset-x-0 top-0 z-50 flex h-16 items-center transition-colors duration-500 ${
         solid ? 'bg-stone-950/85 backdrop-blur-sm' : 'bg-transparent'
       }`}
     >
